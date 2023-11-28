@@ -13,7 +13,7 @@ struct Node
 	Node()
 	{
 		date = "";
-		exchangeRate = -420;
+		exchangeRate = 0;
 	}
 
 };
