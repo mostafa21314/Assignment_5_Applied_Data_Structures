@@ -1,3 +1,5 @@
+// Mostafa gaafar
+// 900214463
 #include<iostream>
 #include"Node.h"
 #include"MinHeap.h"
@@ -129,6 +131,10 @@ void Build_Min_Heap(Node* arr[], int size, string fileName)   // builds a minimu
 		average += arr[counter]->exchangeRate;
 		upHeap(arr, counter++,"min");
    }
+   for (int i = counter; i < size; i++)
+   {
+	   arr[i] = new Node();
+   }
    average = average / (counter-1);
    cout << "The average is " << average <<endl;
    for (int i = 1; i < size ; i++)
@@ -171,6 +177,10 @@ void Build_Max_Heap(Node* arr[], int size, string fileName)   // builds a maximu
 		average += arr[counter]->exchangeRate;
 		upHeap(arr, counter++, "max");
 	}
+	for (int i = counter; i < size; i++)
+	{
+		arr[i] = new Node();
+	}
 	average = average / (counter - 1);
 	cout << "The average is " << average << endl;
 	for (int i = 1; i < size; i++)
@@ -187,14 +197,23 @@ void Build_Max_Heap(Node* arr[], int size, string fileName)   // builds a maximu
 	 cout << arr[i]->exchangeRate << endl;
  }*/
 }
-void insert(Node* arr[], int counter, int size, Node value)
+void insert(Node* arr[], int size, Node value,string type) // created an insert function to insert Nodes directly to the tree
 {
 
-
-
+	for (int i = 1; i < size; i++)
+	{
+		if (arr[i]->date == "")//when it finds the appropriate location
+		{
+			*arr[i] = value;
+			upHeap(arr, i, type);
+			return;
+		}
+		
+	}
+	cout << "The heap is full ";//when the loop goes to the end and doesnt find an empty space
 }
 
-Node deleteNode(Node* arr[], int &current, string type,int size)
+Node deleteNode(Node* arr[], int &current, string type,int size) //created a function that deletes the root node and calls the downheap appropriately to reorganize the heap
 {
 	Node temp = *arr[1];
 	*arr[1] = *arr[current];
@@ -205,7 +224,7 @@ downHeap(arr, 1, type,size);
 
 }
 
-void arrangedValues(Node* arr[],int size, int cursor, int k, string type)
+void arrangedValues(Node* arr[],int size, int cursor, int k, string type) //created a function that deletes and prints the largest k nodes
 {
 	if (type == "min")
 		cout << "The minimum values are : " << endl;
@@ -218,12 +237,45 @@ void arrangedValues(Node* arr[],int size, int cursor, int k, string type)
 	}
 }
 
+void contigiousPeriod(Node* arr[], int size)
+{
+	int sumMax = arr[1]->exchangeRate;
+	int maxEnds = arr[1]->exchangeRate;
+	int start = 1; int end = 1;
+	int temp = 1;
+	for (int i = 2; i < size; i++)
+	{
+		if (arr[i]->exchangeRate > (maxEnds + arr[i]->exchangeRate))
+		{
+			maxEnds = arr[i]->exchangeRate;
+			temp = i;
+		}
+		else
+		{
+			maxEnds = arr[i]->exchangeRate;
+		}
+		if (maxEnds > sumMax)
+		{
+			sumMax = maxEnds;
+			start = temp;
+			end = i;
+		}
+
+	}
+	cout << "The Maximum period is "<<sumMax<<"contigious period is from " << start << " to " << end << " and the values are : " << endl;
+	for (int j = start; j <= end; j++)
+	{
+		cout << arr[j]->date << "  " << arr[j]->exchangeRate << endl;
+	}
+}
+
+
 int main()
 {
 	//Node test("99", 5);
 	//MinHeap exchange(10000);
 	//exchange.insert(test);
-	const int SIZE = 6669;
+	const int SIZE = 6670;
 	Node* minheap[SIZE];
 	Node* maxheap[SIZE];
 	string temp = "/Users/mosta/source/repos/Assignment_5_Applied_Data_Structures/Assignment_5_Applied_Data_Structures/euro-dollar.txt";
@@ -236,10 +288,18 @@ int main()
 	//	Node tempor = deleteNode(minheap, cursor, "min", SIZE);
 	//	cout << tempor.date << "  " << tempor.exchangeRate << endl;
 	//}
-	arrangedValues(maxheap, SIZE, cursorMax, 10, "max");
+	
+
+	//Node test;
+	//test.date = "05/01/2004"; test.exchangeRate = 0.8; // testing the insert function
+	//insert(maxheap, SIZE, test, "max");
+
+	//arrangedValues(maxheap, SIZE, cursorMax, 10, "max"); 
 	arrangedValues(minheap, SIZE, cursorMin, 10, "min");
 	// deleteNode(minheap, cursor, "min")->exchangeRate;
-	//eleteNode(minheap, cursor, "min")->exchangeRate;
+	//eleteNode(minheap, cursor, "min")->exchangeRate; // testing the delete function
+
+	contigiousPeriod(maxheap, SIZE);
 
 
 
